@@ -1,7 +1,7 @@
 from src.reader import Reader
 
 
-example = True
+example = False
 
 ## Part 1
 
@@ -40,13 +40,57 @@ for x, y in list_order:
 
 
 # Process the updates
+# - Get which are correct and which are incorrect
+total = 0
+update_incorrect = list()
 for update in list_update:
-    total = 0
+    good = True
     for i in range(len(update) - 1):
         for j in range(i + 1, len(update)):
             x, y = update[i], update[j]
             if y not in order[x]["before"]:
-                print(x, y, "NOT GOOD")
+                # print(f"{update} not good: x={x} and y={y}")
+                good = False
+                update_incorrect.append(update)
+                break
+        if not good:
+            break
 
+    if good:
+        middle = update[len(update) // 2]
+        # print(f"{update} good: {middle}")
+        total += middle
 
 print("Part 1:", total)
+
+
+## Part 2
+
+
+def insert(array: list, value: int):
+    """
+    Insert the value in the update at the correct position.
+    """
+
+    global order
+
+    for i, x in enumerate(array):
+        if value in order[x]["after"]:
+            array.insert(i, value)
+            break
+    else:
+        array.append(value)
+
+
+total = 0
+for update in update_incorrect:
+    ordered = list()
+    for element in update:
+        insert(ordered, element)
+        pass
+
+    # print(ordered)
+    middle = ordered[len(ordered) // 2]
+    total += middle
+
+print("Part 2:", total)

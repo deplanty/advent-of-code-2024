@@ -7,14 +7,14 @@ class Index:
         j (int): the column position.
     """
 
-    def __init__(self, i:int, j:int):
+    def __init__(self, i: int, j: int):
         self.i = i
         self.j = j
 
-    def __eq__(self, other:"Index") -> bool:
+    def __eq__(self, other: "Index") -> bool:
         return self.i == other.i and self.j == other.j
 
-    def __add__(self, other:"Index") -> "Index":
+    def __add__(self, other: "Index") -> "Index":
         return Index(self.i + other.i, self.j + other.j)
 
     def __hash__(self):
@@ -68,37 +68,45 @@ class Index:
     def NESW(self):
         return self.N, self.E, self.S, self.W
 
+    @classmethod
     @property
-    def delta_N(self):
-        return Index(-1, 0)
+    def delta_N(cls) -> "Index":
+        return cls(-1, 0)
 
+    @classmethod
     @property
-    def delta_S(self):
-        return Index(1, 0)
+    def delta_S(cls) -> "Index":
+        return cls(1, 0)
 
+    @classmethod
     @property
-    def delta_W(self):
-        return Index(0, -1)
+    def delta_W(cls) -> "Index":
+        return cls(0, -1)
 
+    @classmethod
     @property
-    def delta_E(self):
-        return Index(0, 1)
+    def delta_E(cls) -> "Index":
+        return cls(0, 1)
 
+    @classmethod
     @property
-    def delta_NW(self):
-        return Index(-1, -1)
+    def delta_NW(cls) -> "Index":
+        return cls(-1, -1)
 
+    @classmethod
     @property
-    def delta_NE(self):
-        return Index(-1, 1)
+    def delta_NE(cls) -> "Index":
+        return cls(-1, 1)
 
+    @classmethod
     @property
-    def delta_SW(self):
-        return Index(1, -1)
+    def delta_SW(cls) -> "Index":
+        return cls(1, -1)
 
+    @classmethod
     @property
-    def delta_SE(self):
-        return Index(1, 1)
+    def delta_SE(cls) -> "Index":
+        return cls(1, 1)
 
     # Methods
 
@@ -128,16 +136,32 @@ class Index:
         Return the direction to move from the current position to the 8 neighbours.
         """
 
-        return [self.delta_N, self.delta_NE, self.delta_E, self.delta_SE, self.delta_S, self.delta_SW, self.delta_W, self.delta_NW]
+        return [
+            self.delta_N,
+            self.delta_NE,
+            self.delta_E,
+            self.delta_SE,
+            self.delta_S,
+            self.delta_SW,
+            self.delta_W,
+            self.delta_NW,
+        ]
 
-    def get(self, table:list):
+    def get(self, table: list):
         """
         Return the value of the table at the current index.
         """
 
         return table[self.i][self.j]
 
-    def is_in(self, table:list):
+    def set(self, table: list, value):
+        """
+        Set the valut un the table at the current index.
+        """
+
+        table[self.i][self.j] = value
+
+    def is_in(self, table: list):
         rows = len(table)
         cols = len(table[0])
         return 0 <= self.i < rows and 0 <= self.j < cols

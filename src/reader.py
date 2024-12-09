@@ -1,5 +1,5 @@
 class Reader:
-    def __init__(self, day: int, example:bool=False):
+    def __init__(self, day: int, example: bool = False):
         if example:
             self.filename = f"inputs/day{day}ex.txt"
         else:
@@ -20,7 +20,7 @@ class Reader:
                 return
             yield line.rstrip()
 
-    def _split(self, line:str,  separator: str=" ") -> list:
+    def _split(self, line: str, separator: str = " ") -> list:
         return line.split(separator)
 
     def iter_lines(self, type=str) -> list:
@@ -31,7 +31,7 @@ class Reader:
         for line in self._iter_lines():
             yield type(line)
 
-    def iter_split(self, separator: str=" ", *types) -> list:
+    def iter_split(self, separator: str = " ", *types) -> list:
         """
         Yield a list of the next line and extract the given types.
 
@@ -57,7 +57,7 @@ class Reader:
                 else:
                     yield [t(value) for value, t in zip(line, types)]
 
-    def get_table(self, separator: str=" ", *types) -> list[list]:
+    def get_table(self, separator: str = " ", *types) -> list[list]:
         """
         Return a table of the given types.
 
@@ -72,7 +72,9 @@ class Reader:
             ```
         """
 
-        if separator == "":
+        if separator is None:
             return [line for line in self.iter_lines()]
+        elif separator == "":
+            return [list(line) for line in self.iter_lines()]
         else:
             return [line for line in self.iter_split(separator, *types)]
