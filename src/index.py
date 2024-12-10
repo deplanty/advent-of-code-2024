@@ -17,6 +17,9 @@ class Index:
     def __add__(self, other: "Index") -> "Index":
         return Index(self.i + other.i, self.j + other.j)
 
+    def __sub__(self, other: "Index") -> "Index":
+        return Index(self.i - other.i, self.j - other.j)
+
     def __hash__(self):
         return hash(self.ij)
 
