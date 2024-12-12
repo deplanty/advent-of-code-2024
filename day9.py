@@ -5,13 +5,13 @@ def calc_checksum(line: list[int]) -> int:
     total = 0
     for i, val in enumerate(line):
         if val is None:
-            break
+            continue
         total += i * val
 
     return total
 
 
-example = True
+example = False
 
 ## Part 1
 
@@ -45,84 +45,65 @@ print("Part 1:", total)
 
 ## Part 2
 
-
-class MemorySlot:
-    def __init__(self, size: int, iid: int = None):
-        self.size = size
-        self.iid = iid
-
-    def __str__(self):
-        return f"{self.iid}x{self.size}"
-
-    def __repr__(self):
-        return str(self)
-
-    def checksum(self) -> int:
-        if self.iid is None:
-            return 0
-
-        cs = 0
-        for i in range(self.size):
-            cs += i * self.iid
-        return cs
-
-    def is_file(self) -> bool:
-        return self.iid is not None
-
-    def is_empty(self) -> bool:
-        return self.iid is None
-
-    def can_fit(self, slot: "MemorySlot") -> bool:
-        return self.size >= slot.size
-
-    def clear(self):
-        self.iid = None
-
-
-def calc_checksum(line: list[MemorySlot]) -> int:
-    total = 0
-    i = 0
-    for slot in line:
-        if slot.is_empty():
-            break
-        for _ in range(slot.size):
-            total += i * val
-            i += 1
-
-    return total
-
-
+sizes = dict()
 storage = list()
-for i, size in enumerate(memory):
+for i, val in enumerate(memory):
     if i % 2 == 0:
         iid = i // 2
+        storage.extend([iid] * val)
+        sizes[iid] = val
     else:
-        iid = None
-    storage.append(MemorySlot(size, iid))
+        storage.extend([None] * val)
+iid_order = list(reversed(sizes.keys()))
+
+positions = dict()
+for iid in sizes:
+    positions[iid] = storage.index(iid)
 
 
-for j in range(len(storage), -1, -1):
-    for i in range(j):
-        if storage[i].is_file():
-            continue
-
-        if storage[i].can_fit(storage[j]):
-            size_i = storage[i].size
-            size_j = storage[j].size
-            storage[i] = storage.pop(j)
-            storage.insert(i + 1, MemorySlot(size_i - size_j, None))
+# print(sizes)
+# print(iid_order)
+# print(storage)
+# print()
 
 
-line = list()
-for slot in storage:
-    if slot.is_empty():
-        iid = "."
-    else:
-        iid = str(slot.iid)
-    for _ in range(slot.size):
-        line.append(iid)
+for iid in iid_order:
+    # The file we want to find some free space
+    size = sizes[iid]
+    tail = positions[iid]
 
-print("".join(line))
+    # print(f"Current is {iid} with size {size}")
+
+    # Find first free space
+    head = 0
+    while head < tail:
+        while storage[head] is not None:
+            head += 1
+        # print(f"    Head index {head} -> find free space")
+
+        if head > tail:
+            break
+
+        # Find size of free space
+        free = 0
+        while head + free < len(storage) and storage[head + free] is None:
+            free += 1
+        # print(f"    Head index {head} -> find free space = size {free}")
+
+        # Check if current file can fit
+        if size <= free:
+            # print(f"    Current {iid} fits in Head index {head} -> use {size}/{free} space")
+            for i in range(size):
+                storage[head + i] = iid
+                storage[tail + i] = None
+            break
+        else:
+            # print(f"    Current {iid} does not fit in Head index {head} -> use {size}/{free} space")
+            head += min(size, free)
+
+    # print(storage)
+    # print()
+
 
 total = calc_checksum(storage)
 print("Part 2:", total)
