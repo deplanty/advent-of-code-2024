@@ -23,9 +23,16 @@ class Reader:
     def _split(self, line: str, separator: str = " ") -> list:
         return line.split(separator)
 
+    def one_line(self) -> str:
+        """
+        Return one line of the file.
+        """
+
+        return self.fid.readline().rstrip()
+
     def iter_lines(self, type=str) -> list:
         """
-        Yield one line after the other
+        Yield one line after the other.
         """
 
         for line in self._iter_lines():
