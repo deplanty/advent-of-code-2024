@@ -1,23 +1,12 @@
+import copy
+
 from src import Reader, Debug, Index
 
 
-class Path(list):
-    def __init__(self, start: Index):
-        super().__init__()
-        self.append(start)
+debug = Debug(False)
+example = False
 
-    @property
-    def first(self) -> Index:
-        return self[0]
-
-    @property
-    def last(self) -> Index:
-        return self[-1]
-
-
-debug = Debug(True)
-
-example = True
+## Part 1
 
 with Reader(10, example) as reader:
     table = reader.get_table("", int)
@@ -33,36 +22,56 @@ debug(*table, sep="\n")
 debug(starts)
 debug()
 
-all_pathes: list[Path] = [Path(index) for index in starts]
+pathes: list[list[Index]] = [[index] for index in starts]
+pathes_ok: list[list[Index]] = list()
 
-for start in starts:
-    # For all the possible starts, check all the passages
-    ends: dict[Index, set] = {index: set() for index in starts}
-    visited: set[Index] = starts.copy()
-    currents: set[Index] = starts.copy()
-    pathes: list[Path]
-    while currents:
-        print(currents)
-        next_positions = set()
-        # Look for all the current positions
-        for index in currents:
-            value = index.get(table)
-            if value == 9:
-                ends.add(index)
+count = 1_000
+while pathes and count > 0:
+    new_pathes: list[list[Index]] = list()
+
+    for path in pathes:
+        debug(f"Path {path}", end=" | ")
+        # Check if the last value is the end of a path
+        value = path[-1].get(table)
+        if value == 9:
+            debug("end of road")
+            pathes_ok.append(path)
+            continue
+
+        # Look for all the neighbours
+        for position in path[-1].NESW:
+            if not position.is_in(table):
+                debug(f"{position} ✗", end=" | ")
                 continue
+            if position.get(table) == value + 1:
+                tmp = copy.deepcopy(path)
+                tmp.append(position)
+                new_pathes.append(tmp)
+                debug(f"{position} ✓", end=" | ")
+            else:
+                debug(f"{position} ✗", end=" | ")
+        debug()
 
-            # Look for all the neighbours
-            for position in index.NESW:
-                if not position.is_in(table):
-                    continue
-                if position in visited:
-                    continue
-                if position.get(table) == value + 1:
-                    next_positions.add(position)
+    pathes = new_pathes
+    count -= 1
 
-        visited.update(next_positions)
-        currents = next_positions
+    debug()
 
-debug(ends)
-total = len(ends)
+# Get the reachable peaks
+trails = dict()
+for path in pathes_ok:
+    head = path[0]
+    if head not in trails:
+        trails[head] = set()
+    trails[head].add(path[-1])
+
+total = 0
+for head, peaks in trails.items():
+    debug(head, len(peaks))
+    total += len(peaks)
 print("Part 1:", total)
+
+## Part 2
+
+total = len(pathes_ok)
+print("Part 2:", total)
