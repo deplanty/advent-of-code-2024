@@ -31,12 +31,11 @@ class Debug:
 
     # Methods
 
-    def set(self, enabled: bool):
-        """
-        Enable or Disable the printing.
-        """
+    def enable(self):
+        self._debug = True
 
-        self._debug = enabled
+    def disable(self):
+        self._debug = False
 
     def toggle(self):
         """
