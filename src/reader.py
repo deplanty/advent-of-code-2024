@@ -82,13 +82,16 @@ class Reader:
         if separator is None:
             return [line for line in self.iter_lines()]
         elif separator == "":
-            return [list(line) for line in self.iter_lines()]
+            type = types[0]
+            return [[type(x) for x in line] for line in self.iter_lines()]
         else:
             return [line for line in self.iter_split(separator, *types)]
 
     def get_field(self, separator: str = " ", type=str) -> list[list]:
         """
         Return a table where each cell has the given type.
+
+        FIXME: separator is not used
         """
 
         return [[type(x) for x in line] for line in self.iter_lines()]
