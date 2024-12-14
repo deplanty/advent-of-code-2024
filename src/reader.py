@@ -64,6 +64,18 @@ class Reader:
                 else:
                     yield [t(value) for value, t in zip(line, types)]
 
+    def get_line(self, separator: str = " ", *types) -> list:
+        """
+        Return one line as a list of the given types.
+        """
+
+        if separator is None:
+            return self.one_line()
+        elif separator == "":
+            return [t(char) for char, t in zip(list(self.one_line()), types)]
+        else:
+            return next(self.iter_split(separator, *types))
+
     def get_table(self, separator: str = " ", *types) -> list[list]:
         """
         Return a table of the given types.
