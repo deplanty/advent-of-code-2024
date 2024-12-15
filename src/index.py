@@ -8,8 +8,8 @@ class Index:
     """
 
     def __init__(self, i: int, j: int):
-        self.i = i
-        self.j = j
+        self.i = int(i)
+        self.j = int(j)
 
     def __eq__(self, other: "Index") -> bool:
         return self.i == other.i and self.j == other.j
@@ -19,6 +19,9 @@ class Index:
 
     def __sub__(self, other: "Index") -> "Index":
         return Index(self.i - other.i, self.j - other.j)
+
+    def __rmul__(self, other: int) -> "Index":
+        return Index(self.i * other, self.j * other)
 
     def __hash__(self):
         return hash(self.ij)

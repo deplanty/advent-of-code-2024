@@ -23,6 +23,13 @@ class Reader:
     def _split(self, line: str, separator: str = " ") -> list:
         return line.split(separator)
 
+    def raw_line(self) -> str:
+        """
+        Return one raw line of the file (with \n at the end).
+        """
+
+        return self.fid.readline()
+
     def one_line(self) -> str:
         """
         Return one line of the file.
