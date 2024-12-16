@@ -6,8 +6,8 @@ def stone_evolve(stone: int) -> list:
         return [1]
     elif len(str(stone)) % 2 == 0:
         tmp = str(stone)
-        s1 = int(tmp[:len(tmp) // 2])
-        s2 = int(tmp[len(tmp) // 2:])
+        s1 = int(tmp[: len(tmp) // 2])
+        s2 = int(tmp[len(tmp) // 2 :])
         return [s1, s2]
     else:
         return [stone * 2024]

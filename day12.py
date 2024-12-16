@@ -90,7 +90,9 @@ for i, line in enumerate(table):
 
         # From this position, find all the connected elements with the same symbol
         connected: set[Index] = {index}  # The list of the connected symbols
-        visited_current: set[Index] = set()  # The visited positions for the connected symbols
+        visited_current: set[Index] = (
+            set()
+        )  # The visited positions for the connected symbols
         current: set[Index] = {index}  # The current symbols seen
         while current:
             next_current: set[Index] = set()
@@ -115,7 +117,9 @@ debug.disable()
 total = 0
 for region in regions:
     price = region.count_edges() * region.area()
-    debug(f"Region {region.symbol} | area {region.area()} | edges {region.count_edges()} | price {price}")
+    debug(
+        f"Region {region.symbol} | area {region.area()} | edges {region.count_edges()} | price {price}"
+    )
     total += price
 print("Part 1:", total)
 

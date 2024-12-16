@@ -14,7 +14,7 @@ with Reader(1) as reader:
 left = sorted(left)
 right = sorted(right)
 
-total =  0
+total = 0
 for l, r in zip(left, right):
     total += abs(l - r)
 

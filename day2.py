@@ -5,7 +5,8 @@ from src import utils
 
 ## Part 1
 
-def is_ok(diff: int, sign:int) -> bool:
+
+def is_ok(diff: int, sign: int) -> bool:
     # Monotonous and small variation (<= 3)
     return diff != 0 and utils.sign(diff) == sign and abs(diff) <= 3
 

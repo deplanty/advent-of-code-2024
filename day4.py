@@ -2,16 +2,17 @@ from src.index import Index
 from src.reader import Reader
 
 
-
 example = False
 
 ## Part 1
 
-def count_xmas(table:list, index:Index) -> int:
+
+def count_xmas(table: list, index: Index) -> int:
     """
     Count the number of time a XMAS appears from the position.
     """
-    def check(table:list, index:Index, value:str) -> bool:
+
+    def check(table: list, index: Index, value: str) -> bool:
         if index.is_in(table):
             return index.get(table) == value
 
@@ -52,12 +53,13 @@ print("Part 1:", total)
 
 ## Part 2
 
-def count_mas(table:list, index:Index) -> int:
+
+def count_mas(table: list, index: Index) -> int:
     """
     Count the number of time a MAS appears from the position.
     """
 
-    def check(table:list, index:Index, value:str) -> bool:
+    def check(table: list, index: Index, value: str) -> bool:
         if index.is_in(table):
             return index.get(table) == value
         else:

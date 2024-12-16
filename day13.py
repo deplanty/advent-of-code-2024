@@ -22,7 +22,6 @@ pattern_button = re.compile(r"Button \w: X\+(?P<x>\d+), Y\+(?P<y>\d+)")
 pattern_prize = re.compile(r"Prize: X=(?P<x>\d+), Y=(?P<y>\d+)")
 
 with Reader(13, example) as reader:
-
     games: list[tuple[Index]] = list()
     blank = "\n"
     while blank == "\n":
