@@ -1,4 +1,8 @@
 import tkinter as tk
+import typing
+
+if typing.TYPE_CHECKING:
+    from .index import Index
 
 
 class Show(tk.Tk):
@@ -12,6 +16,8 @@ class Show(tk.Tk):
 
         self.table_iids = set()
         self.coords_iids = set()
+
+        self.geometry("+20+20")
 
     def show_table(self, table:list[list], colormap:dict):
         for i, line in enumerate(table):
@@ -41,6 +47,20 @@ class Show(tk.Tk):
             )
             self.coords_iids.add(iid)
 
+    def show_path(self, coords: list["Index"], color:str = "black"):
+        for i in range(len(coords) - 1):
+            a = coords[i]
+            b = coords[i + 1]
+            iid = self.canvas.create_line(
+                a.j * self.scale + self.scale / 2,
+                a.i * self.scale + self.scale / 2,
+                b.j * self.scale + self.scale / 2,
+                b.i * self.scale + self.scale / 2,
+                fill=color,
+                width=self.scale / 4,
+                arrow="last"
+            )
+            self.coords_iids.add(iid)
 
 
 if __name__ == '__main__':
