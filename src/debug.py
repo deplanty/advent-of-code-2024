@@ -31,6 +31,16 @@ class Debug:
 
     # Methods
 
+    def input(self, prompt: str) -> str:
+        if self._debug:
+            input(prompt)
+
+    def show_field(self, lines:list[list[str]]):
+        for line in lines:
+            self("".join(line))
+
+    # Methods to control the behavior
+
     def enable(self):
         self._debug = True
 
