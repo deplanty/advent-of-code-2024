@@ -23,6 +23,9 @@ class Reader:
     def _split(self, line: str, separator: str = " ") -> list:
         return line.split(separator)
 
+    def skip(self, n_chars: int) -> str:
+        return self.fid.read(n_chars)
+
     def raw_line(self) -> str:
         """
         Return one raw line of the file (with \n at the end).
