@@ -9,57 +9,56 @@ example = False
 
 class Towel:
     def __init__(self):
-        self.colors: str = str()
+        self.patterns: list[str] = list()
         self.debug = Debug(False)
 
     def __str__(self) -> str:
         return self.colors
 
     def __repr__(self) -> str:
-        return str(self)
+        return " ".join(self.patterns)
 
     def __hash__(self) -> int:
         return hash(self.colors)
 
-    def add(self, pattern: str, design:str) -> bool:
-        """Try to add the pattern to match the design"""
+    def __len__(self) -> int:
+        return len(self.colors)
+
+    @property
+    def colors(self) -> str:
+        return "".join(self.patterns)
+
+    def can_add(self, pattern: str, design: str) -> bool:
+        """Check if the pattern can be add to make the design"""
+
         n_current = len(self.colors)
         n_size = len(pattern)
+        self.debug(n_current, n_size, design[n_current:n_size], pattern, end=" ")
+        return design[n_current : n_current + n_size] == pattern
 
-        self.debug(n_current, n_size, design[n_current : n_size], pattern, end=" ")
-        if design[n_current : n_current + n_size] == pattern:
-            self.colors += pattern
-            self.debug("OK")
-            return True
-        else:
-            self.debug("X")
-            return False
+    def add(self, pattern: str):
+        """Add the pattern to the towel"""
 
-    def match(self, design:str) -> bool:
+        self.patterns.append(pattern)
+
+    def match(self, design: str) -> bool:
+        """Return if the towel match the design"""
+
         return self.colors == design
 
 
 ## Part 1
-
-# debug.disable()
 
 with Reader(19, example) as reader:
     patterns = reader.get_line(", ")
     reader.raw_line()
     designs = [line for line in reader.iter_lines()]
 
-# Store the first color of each pattern
-# starts: dict[str, list[str]] = dict()
-# for pattern in patterns:
-#     x = pattern[0]
-#     if x not in starts:
-#         starts[x] = list()
-#     starts[x].append(pattern)
-
 # Try to find if all the designs can be created
-found = 0
+found: set[str] = set()
+not_found: set[str] = set()
 for i, design in enumerate(designs, 1):
-    debug(f"Design {i}/{len(designs)}: design")
+    debug(f"P1 Design {i}/{len(designs)}: design")
     # Init the towels
     towels: set[Towel] = set()
     for pattern in patterns:
@@ -82,8 +81,8 @@ for i, design in enumerate(designs, 1):
                     continue
                 if new_towel.match(design):
                     search = False
-                    found += 1
-                    debug("FIND:", new_towel)
+                    found.add(design)
+                    debug("FIND:", design)
                     break
                 if added:
                     next_towels.add(new_towel)
@@ -95,6 +94,63 @@ for i, design in enumerate(designs, 1):
 
         towels = next_towels
         count -= 1
+
+    if search:
+        not_found.add(design)
+        debug("NOT FIND:", design)
     debug()
 
-print("Part 1:", found)
+# debug("Found", found, sep="\n")
+
+print("Part 1:", len(found))
+
+## Part 2
+
+# Remove the designs that can't be made
+# for design in not_found:
+#     designs.remove(design)
+
+# Try to find if all the designs and arrangements
+found = 0
+for i, design in enumerate(designs, 1):
+    debug(f"P2 Design {i}/{len(designs)}: {design}")
+    # Init the towels
+    towels: set[Towel] = set()
+    for pattern in patterns:
+        towel = Towel()
+        if towel.can_add(pattern, design):
+            towel.add(pattern)
+            towels.add(towel)
+    # Find the patterns for the towels
+    unmakable: set[str] = set()  # Last part of a design unmakable
+    count = 10_000
+    while towels and count > 0:
+        # debug("Towels:", len(towels))
+        next_towels: set[Towel] = set()
+        for towel in towels:
+            makable = False
+            for pattern in patterns:
+                new_towel = copy.deepcopy(towel)
+                can_add = new_towel.can_add(pattern, design)
+                # Skip if the pattern cannot be added to the towel
+                if not can_add:
+                    continue
+                # Add the pattern and check if the towel is valid or match the full design
+                new_towel.add(pattern)
+                makable = True
+                if len(new_towel) > len(design):
+                    continue
+                elif new_towel.match(design):
+                    found += 1
+                    debug("FIND:", design)
+                    break
+
+                next_towels.add(new_towel)
+            if not makable:
+                unmakable.add(towel)
+        towels = next_towels
+        count -= 1
+
+    debug()
+
+print("Part 2:", found)
