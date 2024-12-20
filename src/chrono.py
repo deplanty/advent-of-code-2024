@@ -3,7 +3,7 @@ import time
 
 class Chrono:
     def __init__(self):
-        self._start = time.time()
+        self._start = time.perf_counter()
         self._end = None
 
         self._state = "run"
@@ -11,20 +11,20 @@ class Chrono:
     def start(self):
         """Start the chronometer."""
 
-        self._start = time.time()
+        self._start = time.perf_counter()
         self._end = None
         self._state = "run"
 
     def stop(self) -> float:
         """Stop the chronometer and return the elapsed time in seconds."""
 
-        self._end = time.time()
+        self._end = time.perf_counter()
         self._state = "idle"
         return self._end - self._start
 
     def get(self) -> float:
         if self._state == "run":
-            return time.time() - self._start
+            return time.perf_counter() - self._start
         else:
             return self._end - self._start
 
