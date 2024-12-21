@@ -23,6 +23,9 @@ class Index:
     def __rmul__(self, other: int) -> "Index":
         return Index(self.i * other, self.j * other)
 
+    def __rdiv__(self, other: int) -> "Index":
+        return Index(self.i / other, self.j / other)
+
     def __hash__(self):
         return hash(self.ij)
 
@@ -137,20 +140,34 @@ class Index:
 
         return [self.NE, self.SE, self.SW, self.NW]
 
-    def get_directions_8(self) -> list["Index"]:
+    @classmethod
+    def get_directions_4(cls) -> list["Index"]:
         """
-        Return the direction to move from the current position to the 8 neighbours.
+        Return the direction to move to the 4 neighbours.
         """
 
         return [
-            self.delta_N,
-            self.delta_NE,
-            self.delta_E,
-            self.delta_SE,
-            self.delta_S,
-            self.delta_SW,
-            self.delta_W,
-            self.delta_NW,
+            cls.delta_N,
+            cls.delta_E,
+            cls.delta_S,
+            cls.delta_W,
+        ]
+
+    @classmethod
+    def get_directions_8(cls) -> list["Index"]:
+        """
+        Return the direction to move to the 8 neighbours.
+        """
+
+        return [
+            cls.delta_N,
+            cls.delta_NE,
+            cls.delta_E,
+            cls.delta_SE,
+            cls.delta_S,
+            cls.delta_SW,
+            cls.delta_W,
+            cls.delta_NW,
         ]
 
     def get(self, table: list):

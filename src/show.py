@@ -38,10 +38,10 @@ class Show(tk.Tk):
         for index in coords:
             i, j = index.ij
             iid = self.canvas.create_rectangle(
-                j * self.scale,
-                i * self.scale,
-                (j + 1) * self.scale,
-                (i + 1) * self.scale,
+                j * self.scale + 1,
+                i * self.scale + 1,
+                (j + 1) * self.scale - 1,
+                (i + 1) * self.scale - 1,
                 fill=color,
                 outline="",
             )
