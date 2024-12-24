@@ -26,6 +26,9 @@ class Reader:
     def skip(self, n_chars: int) -> str:
         return self.fid.read(n_chars)
 
+    def read(self) -> str:
+        return self.fid.read()
+
     def raw_line(self) -> str:
         """
         Return one raw line of the file (with \n at the end).
